@@ -1,0 +1,18 @@
+{
+    "job_role": "Python Developer",
+    "required_skills": [
+        "python",
+        "json",
+        "regex",
+        "file handling",
+        "algorithms",
+        "data structures"
+    ],
+    "preferred_skills": [
+        "debugging",
+        "git",
+        "problem solving"
+    ],
+    "minimum_experience": 2,
+    "education": "B.Tech"
+}

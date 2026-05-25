@@ -1,0 +1,22 @@
+====================================
+ SMART HIRE RESUME ANALYSIS REPORT
+====================================
+
+Candidate Name : John Doe
+Email          : john@example.com
+Phone          : 9876543210
+Experience     : 3 years
+Education      : b.tech
+
+Matched Skills:
+- python
+- json
+- regex
+- file handling
+- algorithms
+
+Missing Skills:
+- data structures
+
+Final Match Score : 78.33/100
+Recommendation    : Moderate Match

@@ -1,0 +1,14 @@
+John Doe
+
+Email: john@example.com
+Phone: 9876543210
+
+Education:
+B.Tech in Computer Science
+
+Skills:
+Python, JSON, Regex, File Handling,
+Algorithms, Debugging
+
+Experience:
+3 years Python Developer

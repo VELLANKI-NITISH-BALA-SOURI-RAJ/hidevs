@@ -1,0 +1,22 @@
+====================================
+ SMART HIRE RESUME ANALYSIS REPORT
+====================================
+
+Candidate Name : Vellanki Nitish Bala Souri Raj
+Email          : penitishraj17042006@gmail.com
+Phone          : 7013300517
+Experience     : 0 years
+Education      : b.tech
+
+Matched Skills:
+- python
+
+Missing Skills:
+- json
+- regex
+- file handling
+- algorithms
+- data structures
+
+Final Match Score : 18.33/100
+Recommendation    : Weak Match

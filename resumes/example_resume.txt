@@ -1,0 +1,7 @@
+John Doe
+Email: john@example.com
+Phone: 9876543210
+
+Experienced Python developer with 3 years of experience in JSON processing, file handling, algorithms, regex, debugging, and data structures.
+
+Education: B.Tech in Computer Science

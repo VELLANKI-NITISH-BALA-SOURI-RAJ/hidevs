@@ -1,0 +1,51 @@
+[
+    {
+        "candidate_name": "John Doe",
+        "email": "john@example.com",
+        "phone": "9876543210",
+        "skills": [
+            "file handling",
+            "python",
+            "debugging",
+            "json",
+            "regex",
+            "algorithms"
+        ],
+        "experience": 3,
+        "education": "b.tech",
+        "matched_skills": [
+            "python",
+            "json",
+            "regex",
+            "file handling",
+            "algorithms"
+        ],
+        "missing_skills": [
+            "data structures"
+        ],
+        "match_score": 78.33,
+        "recommendation": "Moderate Match"
+    },
+    {
+        "candidate_name": "Vellanki Nitish Bala Souri Raj",
+        "email": "penitishraj17042006@gmail.com",
+        "phone": "7013300517",
+        "skills": [
+            "python"
+        ],
+        "experience": 0,
+        "education": "b.tech",
+        "matched_skills": [
+            "python"
+        ],
+        "missing_skills": [
+            "json",
+            "regex",
+            "file handling",
+            "algorithms",
+            "data structures"
+        ],
+        "match_score": 18.33,
+        "recommendation": "Weak Match"
+    }
+]
