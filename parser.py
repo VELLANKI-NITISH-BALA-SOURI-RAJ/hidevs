@@ -1,22 +1,32 @@
+"""Utilities for parsing resumes (text or PDF) into structured data.
+
+This module provides a small `ResumeParser` class intended for
+educational and lightweight production use. It extracts a candidate's
+name, contact details, skills, experience and education.
+"""
+
+from __future__ import annotations
+
 import os
 import re
+from typing import Dict, List
 
 try:
-    from pypdf import PdfReader
-except ImportError:
+    from pypdf import PdfReader  # optional dependency
+except Exception:  # pragma: no cover - keep parser usable without pypdf
     PdfReader = None
 
 
 class ResumeParser:
 
-    SKILLS = {
+    SKILLS: Dict[str, List[str]] = {
         "python": ["python", "py"],
         "json": ["json"],
         "regex": ["regex", "regular expressions"],
         "file handling": ["file handling", "files"],
         "algorithms": ["algorithms", "problem solving"],
         "data structures": ["data structures", "dsa"],
-        "debugging": ["debugging", "debug"]
+        "debugging": ["debugging", "debug"],
     }
 
     def __init__(self, file_path):

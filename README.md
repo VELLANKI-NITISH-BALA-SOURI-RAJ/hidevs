@@ -1,45 +1,64 @@
 # SmartHire Resume Analyzer
 
-## Description
+AI-powered Resume Analyzer built with Python and Streamlit for automated resume screening, skill extraction, candidate matching, and recruiter report generation.
 
-SmartHire Resume Analyzer is a Python-based application
-that automates resume screening.
+---
+
+## Live Application
+
+🔗 https://vellanki-nitish-bala-souri-raj-hidevs-app-rfbudh.streamlit.app/
+
+---
+
+## Project Overview
+
+SmartHire Resume Analyzer is a Python-based application that automates the resume screening process for recruiters and hiring teams.
 
 The system:
 - extracts candidate information
 - analyzes resumes
 - calculates match scores
-- generates recruiter reports
-- stores results in JSON format
+- generates hiring recommendations
+- creates recruiter-friendly reports
+- stores candidate data in JSON format
+
+This project helps simplify and accelerate the hiring workflow by automatically evaluating resumes against required skills and criteria.
 
 ---
 
-# Features
+## Features
 
 - Resume Parsing
 - Skill Extraction
 - Match Score Calculation
-- JSON File Handling
 - Hiring Recommendations
+- JSON Data Storage
 - Professional Report Generation
 - Multiple Resume Analysis
+- Streamlit User Interface
+- PDF and TXT Resume Support
+- Automated Candidate Evaluation
 
 ---
 
-# Technologies Used
+## Technologies Used
 
 - Python
-- Regular Expressions
+- Streamlit
+- Regular Expressions (Regex)
 - JSON
 - File Handling
 - Matching Algorithms
+- Text Processing Techniques
 
 ---
 
-# Project Structure
+## Project Structure
 
+```text
 project/
 │
+├── app.py
 ├── main.py
 ├── parser.py
 ├── matcher.py
@@ -50,71 +69,122 @@ project/
 ├── resumes/
 ├── reports/
 │
-├── requirements.json
 ├── candidates.json
+├── requirements.txt
 └── README.md
+```
 
 ---
 
-# How to Run
+## How to Run the Project
 
-## Step 1
+### Step 1: Clone the Repository
 
-Place resumes inside the resumes folder.
+```bash
+git clone https://github.com/YOUR_USERNAME/intelligent_resume_analyzer_hidevs.git
+```
+
+---
+
+### Step 2: Navigate to Project Folder
+
+```bash
+cd intelligent_resume_analyzer_hidevs
+```
+
+---
+
+### Step 3: Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+### Step 4: Add Resume Files
+
+Place resume files inside the `resumes/` folder.
 
 Supported formats:
 - TXT
 - PDF
 
-Example resume files can be added to the `resumes/` folder to run the analyzer.
-
 ---
 
-## Step 2
+### Step 5: Run Command-Line Version
 
-Run the command-line program:
-
+```bash
 python main.py
+```
 
 ---
 
-## Step 3
+### Step 6: Run Streamlit User Interface
 
-Run the Streamlit UI:
-
-python -m streamlit run app.py
-
-Supported resume formats in the UI:
-- TXT
-- PDF
+```bash
+streamlit run app.py
+```
 
 ---
 
-# Output
+## Output Generated
 
 The system generates:
+
 - Match Scores
 - Hiring Recommendations
-- JSON Candidate Data
-- Text Reports
+- Candidate JSON Data
+- Recruiter Reports
+- Resume Analysis Results
 
 ---
 
-# Evaluation Criteria Covered
+## Evaluation Criteria Covered
 
 ✔ Python Programming  
-✔ Text Processing  
 ✔ Data Extraction Algorithms  
+✔ Text Processing  
 ✔ JSON File Handling  
 ✔ Matching Algorithms  
 ✔ Error Handling  
-✔ Report Generation
+✔ Report Generation  
+✔ Streamlit Interface Development  
 
 ---
 
-# Future Improvements
+## Example Workflow
 
-- PDF Resume Support
-- GUI Interface
-- Advanced Ranking System
-- Better Skill Intelligence"# hidevs" 
+1. Upload candidate resumes
+2. Extract resume content
+3. Analyze skills and qualifications
+4. Calculate matching score
+5. Generate recruiter recommendations
+6. Save reports and candidate data
+
+---
+
+## Future Improvements
+
+- Advanced AI-Based Resume Ranking
+- Better Skill Intelligence
+- NLP-Based Semantic Analysis
+- Database Integration
+- Dashboard Analytics
+- Web Deployment Enhancements
+- Improved Candidate Recommendation Engine
+
+---
+
+## Deployment
+
+The project is deployed using Streamlit Cloud.
+
+Live Link:  
+https://vellanki-nitish-bala-souri-raj-hidevs-app-rfbudh.streamlit.app/
+
+---
+
+## Author
+
+Developed by Hidevs

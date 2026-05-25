@@ -1,34 +1,44 @@
-import os
+"""Streamlit UI for SmartHire Resume Analyzer.
+
+Lightweight interface to upload resumes (TXT/PDF), analyze them against
+`requirements.json` and produce a recruiter report.
+"""
+
+from __future__ import annotations
+
 import json
+from pathlib import Path
+from typing import Dict, List, Tuple
 
 import streamlit as st
+
 from parser import ResumeParser
 from matcher import ResumeMatcher
 from report_generator import generate_report
 from json_handler import load_requirements, save_analysis
 from utils import rank_candidates
 
-RESUME_FOLDER = "resumes"
-REPORT_FOLDER = "reports"
-CANDIDATE_FILE = "candidates.json"
-REQUIREMENTS_FILE = "requirements.json"
 
-if not os.path.exists(RESUME_FOLDER):
-    os.makedirs(RESUME_FOLDER)
+RESUME_FOLDER = Path("resumes")
+REPORT_FOLDER = Path("reports")
+CANDIDATE_FILE = Path("candidates.json")
+REQUIREMENTS_FILE = Path("requirements.json")
 
-if not os.path.exists(REPORT_FOLDER):
-    os.makedirs(REPORT_FOLDER)
+RESUME_FOLDER.mkdir(parents=True, exist_ok=True)
+REPORT_FOLDER.mkdir(parents=True, exist_ok=True)
 
 
-def analyze_uploaded_resume(uploaded_file):
-    file_name = uploaded_file.name
-    file_path = os.path.join(RESUME_FOLDER, file_name)
+def analyze_uploaded_resume(uploaded_file) -> Tuple[Dict, str]:
+    """Save the uploaded file, analyze it and return (result, report_path)."""
+    safe_name = Path(uploaded_file.name).name
+    target = RESUME_FOLDER / safe_name
 
-    with open(file_path, "wb") as file:
-        file.write(uploaded_file.getbuffer())
+    # Write the uploaded file to disk (overwrites if same name exists)
+    with open(target, "wb") as fh:
+        fh.write(uploaded_file.getbuffer())
 
-    requirements = load_requirements(REQUIREMENTS_FILE)
-    parser = ResumeParser(file_path)
+    requirements = load_requirements(str(REQUIREMENTS_FILE))
+    parser = ResumeParser(str(target))
     candidate_data = parser.parse_resume()
 
     matcher = ResumeMatcher(candidate_data, requirements)
@@ -36,11 +46,10 @@ def analyze_uploaded_resume(uploaded_file):
 
     save_analysis(result)
     report_path = generate_report(result, REPORT_FOLDER)
-
     return result, report_path
 
 
-def display_candidate_summary(result, report_path):
+def display_candidate_summary(result: Dict, report_path: str) -> None:
     st.subheader("Candidate Summary")
     st.write(f"**Name:** {result['candidate_name']}")
     st.write(f"**Email:** {result['email']}")
@@ -52,24 +61,22 @@ def display_candidate_summary(result, report_path):
     st.write(f"**Report Path:** {report_path}")
 
     st.markdown("**Matched Skills:**")
-    for skill in result["matched_skills"]:
+    for skill in result.get("matched_skills", []):
         st.write(f"- {skill}")
 
     st.markdown("**Missing Skills:**")
-    for skill in result["missing_skills"]:
+    for skill in result.get("missing_skills", []):
         st.write(f"- {skill}")
 
 
-def load_candidate_rankings(file_path):
-    if not os.path.exists(file_path):
+def load_candidate_rankings(file_path: Path) -> List[Dict]:
+    if not file_path.exists():
         return []
-
     try:
-        with open(file_path, "r", encoding="utf-8") as file:
-            candidates = json.load(file)
+        with open(file_path, "r", encoding="utf-8") as fh:
+            candidates = json.load(fh)
     except (json.JSONDecodeError, FileNotFoundError):
         return []
-
     return sorted(candidates, key=lambda x: x.get("match_score", 0), reverse=True)
 
 
@@ -95,11 +102,7 @@ def main():
         if st.button("Show ranking list"):
             st.session_state.show_rankings = True
 
-    uploaded_file = st.file_uploader(
-        "Upload resume for analysis",
-        type=["txt", "pdf"],
-        help="Upload a .txt or .pdf resume file."
-    )
+    uploaded_file = st.file_uploader("Upload resume for analysis", type=["txt", "pdf"], help="Upload a .txt or .pdf resume file.")
 
     if uploaded_file:
         st.info(f"Uploaded file: {uploaded_file.name}")
@@ -108,7 +111,7 @@ def main():
                 result, report_path = analyze_uploaded_resume(uploaded_file)
                 display_candidate_summary(result, report_path)
                 st.success("Resume analyzed successfully.")
-            except Exception as exc:
+            except Exception as exc:  # pragma: no cover - surface errors to user
                 st.error(f"Error analyzing resume: {exc}")
 
     rankings = load_candidate_rankings(CANDIDATE_FILE)

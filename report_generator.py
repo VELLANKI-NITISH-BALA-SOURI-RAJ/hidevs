@@ -1,79 +1,53 @@
-import os
+"""Generate plain-text recruiter reports from candidate analysis results."""
+
+from pathlib import Path
+from typing import Dict
 
 
-def generate_report(result, report_folder):
+def _sanitize_filename(name: str) -> str:
+    return "".join(c if c.isalnum() or c in (" ", "-", "_") else "_" for c in name).strip().replace(" ", "_")
 
-    if not os.path.exists(report_folder):
-        os.makedirs(report_folder)
 
-    filename = (
-        result["candidate_name"]
-        .replace(" ", "_")
-        + "_report.txt"
-    )
+def generate_report(result: Dict[str, object], report_folder: Path | str) -> str:
+    """Create a human-readable plain-text report and return its path.
 
-    report_path = os.path.join(
-        report_folder,
-        filename
-    )
+    The function is resilient to missing fields and always returns the
+    path where the report was written.
+    """
+    folder = Path(report_folder)
+    folder.mkdir(parents=True, exist_ok=True)
 
-    with open(report_path, "w") as file:
+    candidate = str(result.get("candidate_name") or "candidate")
+    filename = f"{_sanitize_filename(candidate)}_report.txt"
+    report_path = folder / filename
 
-        file.write(
-            "====================================\n"
-        )
+    lines = [
+        "====================================",
+        " SMART HIRE RESUME ANALYSIS REPORT",
+        "====================================\n",
+        f"Candidate Name : {result.get('candidate_name', 'N/A')}",
+        f"Email          : {result.get('email', 'N/A')}",
+        f"Phone          : {result.get('phone', 'N/A')}",
+        f"Experience     : {result.get('experience', 'N/A')} years",
+        f"Education      : {result.get('education', 'N/A')}\n",
+        "Matched Skills:",
+    ]
 
-        file.write(
-            " SMART HIRE RESUME ANALYSIS REPORT\n"
-        )
+    for s in result.get("matched_skills", []):
+        lines.append(f"- {s}")
 
-        file.write(
-            "====================================\n\n"
-        )
+    lines.append("\nMissing Skills:")
+    for s in result.get("missing_skills", []):
+        lines.append(f"- {s}")
 
-        file.write(
-            f"Candidate Name : "
-            f"{result['candidate_name']}\n"
-        )
+    lines.extend([
+        f"\nFinal Match Score : {result.get('match_score', 0)}/100",
+        f"Recommendation    : {result.get('recommendation', 'N/A')}",
+    ])
 
-        file.write(
-            f"Email          : "
-            f"{result['email']}\n"
-        )
+    report_text = "\n".join(lines)
 
-        file.write(
-            f"Phone          : "
-            f"{result['phone']}\n"
-        )
+    with open(report_path, "w", encoding="utf-8") as fh:
+        fh.write(report_text)
 
-        file.write(
-            f"Experience     : "
-            f"{result['experience']} years\n"
-        )
-
-        file.write(
-            f"Education      : "
-            f"{result['education']}\n\n"
-        )
-
-        file.write("Matched Skills:\n")
-
-        for skill in result["matched_skills"]:
-            file.write(f"- {skill}\n")
-
-        file.write("\nMissing Skills:\n")
-
-        for skill in result["missing_skills"]:
-            file.write(f"- {skill}\n")
-
-        file.write(
-            f"\nFinal Match Score : "
-            f"{result['match_score']}/100\n"
-        )
-
-        file.write(
-            f"Recommendation    : "
-            f"{result['recommendation']}\n"
-        )
-
-    return report_path
+    return str(report_path)

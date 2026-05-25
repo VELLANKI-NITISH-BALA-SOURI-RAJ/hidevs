@@ -1,50 +1,77 @@
+"""Simple JSON helpers for requirements and candidate storage.
+
+Provides functions to load job requirements and to store candidate
+analyses in a de-duplicated JSON array. The functions handle common
+errors and keep the API small for educational use.
+"""
+
+from __future__ import annotations
+
 import json
-import os
+from pathlib import Path
+from typing import Any, Dict, List
 
-OUTPUT_FILE = "candidates.json"
+
+OUTPUT_FILE = Path("candidates.json")
 
 
-def load_requirements(file_path):
+def load_requirements(file_path: str) -> Dict[str, Any]:
+    """Load job requirements from a JSON file.
 
+    Returns an empty dict on error.
+    """
     try:
-        with open(file_path, "r") as file:
-            return json.load(file)
-
+        with open(file_path, "r", encoding="utf-8") as fh:
+            return json.load(fh)
     except FileNotFoundError:
         print("Requirements file not found.")
         return {}
-
     except json.JSONDecodeError:
-        print("Invalid JSON format.")
+        print("Invalid JSON format in requirements file.")
         return {}
 
 
-def save_analysis(candidate_result):
+def load_candidates(file_path: Path | None = None) -> List[Dict[str, Any]]:
+    """Return the list of saved candidate analyses.
 
-    data = []
+    If the file doesn't exist or is invalid, an empty list is returned.
+    """
+    path = file_path or OUTPUT_FILE
+    if not path.exists():
+        return []
+    try:
+        with open(path, "r", encoding="utf-8") as fh:
+            return json.load(fh)
+    except Exception:
+        return []
 
-    if os.path.exists(OUTPUT_FILE):
-        try:
-            with open(OUTPUT_FILE, "r", encoding="utf-8") as file:
-                data = json.load(file)
-        except json.JSONDecodeError:
-            data = []
 
-    unique_candidates = {}
-    for existing in data:
-        key = existing.get("email") or existing.get("candidate_name")
+def save_candidate_analysis(candidate_result: Dict[str, Any], file_path: Path | None = None) -> None:
+    """Save or update a candidate analysis in the JSON store.
+
+    De-duplicates entries by `email` if available, otherwise by candidate name.
+    """
+    path = file_path or OUTPUT_FILE
+    data = load_candidates(path)
+
+    key_map: Dict[str, Dict[str, Any]] = {}
+    for item in data:
+        key = item.get("email") or item.get("candidate_name")
         if key:
-            unique_candidates[key] = existing
+            key_map[key] = item
 
     incoming_key = candidate_result.get("email") or candidate_result.get("candidate_name")
     if incoming_key:
-        unique_candidates[incoming_key] = candidate_result
+        key_map[incoming_key] = candidate_result
+        deduped = list(key_map.values())
     else:
-        data.append(candidate_result)
+        # Fallback: append if no reliable key
+        deduped = data + [candidate_result]
 
-    deduped_data = list(unique_candidates.values())
-    if not incoming_key:
-        deduped_data = data
+    with open(path, "w", encoding="utf-8") as fh:
+        json.dump(deduped, fh, indent=4)
 
-    with open(OUTPUT_FILE, "w", encoding="utf-8") as file:
-        json.dump(deduped_data, file, indent=4)
+
+# Backwards-compatible name
+def save_analysis(candidate_result: Dict[str, Any]) -> None:
+    save_candidate_analysis(candidate_result)
